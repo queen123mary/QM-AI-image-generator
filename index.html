@@ -1200,81 +1200,40 @@ new FileReader();
 
 reader.onload = function(e){
 
-const img =
-document.getElementById("uploadGeneratedImage");
+const img = document.getElementById("uploadGeneratedImage");
 
+// FIRST set image
+img.src = e.target.result;
+
+// THEN wait a moment and apply style
+setTimeout(() => {
+
+img.style.display = "block";
 img.style.filter = "none";
 
-img.style.transform = "none";
-
-img.style.border = "none";
-
-img.style.boxShadow =
-"0 0 40px rgba(123,44,255,0.35)";
-
 if(style === "anime"){
-
-img.style.filter =
-"saturate(180%) contrast(120%)";
-
-img.style.transform =
-"scale(1.02)";
-
+img.style.filter = "saturate(180%) contrast(120%)";
 }
 
 else if(style === "ghibli"){
-
-img.style.filter =
-"brightness(115%) saturate(140%) sepia(10%)";
-
+img.style.filter = "brightness(115%) saturate(140%) sepia(10%)";
 }
 
 else if(style === "watercolor"){
-
-img.style.filter =
-"blur(0.6px) saturate(140%) brightness(110%)";
-
+img.style.filter = "blur(0.6px) saturate(140%) brightness(110%)";
 }
 
 else if(style === "sketch"){
-
-img.style.filter =
-"grayscale(100%) contrast(250%) brightness(120%)";
-
-img.style.mixBlendMode = "screen";
-
+img.style.filter = "grayscale(100%) contrast(250%)";
 }
 
-else if(style === "fantasy"){
+}, 100);
 
-img.style.filter =
-"hue-rotate(20deg) saturate(180%) brightness(110%)";
+document.getElementById("uploadLoading").style.display = "none";
+document.getElementById("uploadResult").style.display = "block";
 
-}
-
-else if(style === "cyberpunk"){
-
-img.style.filter =
-"hue-rotate(250deg) saturate(250%) contrast(140%)";
-
-}
-
-else if(style === "oil"){
-
-img.style.filter =
-"saturate(160%) contrast(110%) sepia(20%)";
-
-}
-
-else if(style === "dark"){
-
-img.style.filter =
-"brightness(70%) contrast(140%)";
-
-}
-
-img.src = e.target.result;
-
+saveImage(e.target.result);
+};
 document.getElementById("uploadLoading")
 .style.display = "none";
 
