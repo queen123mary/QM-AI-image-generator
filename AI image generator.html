@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>QM AI Image Generator</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:#050816;
+color:white;
+overflow-x:hidden;
+}
+
+/* NEW SIDEBAR LAYOUT */
+
+body{
+display:flex;
+background:#0b1020;
+}
+
+.sidebar{
+width:260px;
+height:100vh;
+position:fixed;
+left:0;
+top:0;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(20px);
+padding:30px 20px;
+border-right:1px solid rgba(255,255,255,0.1);
+z-index:1000;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+font-size:32px;
+background:linear-gradient(90deg,#fff,#00d4ff,#a855f7);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.sidebar button{
+width:100%;
+padding:16px;
+margin-top:12px;
+border:none;
+border-radius:15px;
+background:rgba(255,255,255,0.06);
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+text-align:left;
+}
+
+.sidebar button:hover{
+background:linear-gradient(90deg,#7b2cff,#00d4ff);
+}
+
+.mainContent{
+margin-left:260px;
+width:100%;
+}
+
+/* BACKGROUND */
+
+.bg1{
+position:fixed;
+width:500px;
+height:500px;
+background:#7b2cff;
+filter:blur(180px);
+opacity:0.25;
+top:-120px;
+right:-120px;
+z-index:-1;
+}
+
+.bg2{
+position:fixed;
+width:450px;
+height:450px;
+background:#00d4ff;
+filter:blur(180px);
+opacity:0.18;
+bottom:-120px;
+left:-120px;
+z-index:-1;
+}
+
+/* HEADER */
+
+header{
+padding:25px 8%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(5,8,22,0.7);
+backdrop-filter:blur(15px);
+position:sticky;
+top:0;
+z-index:999;
+}
+
+.logo{
+font-size:34px;
+font-weight:800;
+background:linear-gradient(90deg,#ffffff,#00d4ff,#a855f7);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+nav{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+}
+
+nav button{
+padding:12px 22px;
+border:none;
+border-radius:50px;
+background:rgba(255,255,255,0.08);
+color:white;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+nav button:hover{
+background:linear-gradient(90deg,#7b2cff,#00d4ff);
+transform:translateY(-2px);
+}
+
+/* HERO */
+
+.hero{
+padding:80px 8%;
+text-align:center;
+}
+
+.hero h1{
+font-size:75px;
+margin-bottom:25px;
+background:linear-gradient(90deg,#ffffff,#00d4ff,#a855f7);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+font-size:21px;
+color:#cbd5e1;
+max-width:900px;
+margin:auto;
+line-height:1.8;
+}
+
+/* BOX */
+
+.generatorSection{
+padding:60px 8%;
+display:none;
+}
+
+
+.activeSection{
+display:block;
+animation:fadeIn 0.5s ease;
+}
+
+.generatorBox{
+max-width:1050px;
+margin:auto;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
+backdrop-filter:blur(20px);
+padding:40px;
+border-radius:35px;
+box-shadow:0 0 50px rgba(0,0,0,0.4);
+}
+
+.generatorBox h2{
+font-size:42px;
+margin-bottom:15px;
+text-align:center;
+}
+
+.generatorBox p{
+text-align:center;
+color:#cbd5e1;
+margin-bottom:35px;
+font-size:18px;
+}
+
+/* TEXTAREA */
+
+textarea{
+width:100%;
+height:180px;
+padding:25px;
+border:none;
+outline:none;
+border-radius:25px;
+background:rgba(255,255,255,0.08);
+color:white;
+font-size:18px;
+resize:none;
+}
+
+textarea::placeholder{
+color:#cbd5e1;
+}
+
+/* FILE */
+
+input[type="file"]{
+width:100%;
+padding:18px;
+margin-top:18px;
+border:none;
+border-radius:18px;
+background:rgba(255,255,255,0.08);
+color:white;
+font-size:17px;
+}
+
+/* TOP CONTROLS */
+
+.topControls{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.topControls select,
+.fastBtn,
+.thinkBtn{
+padding:14px 18px;
+border:none;
+border-radius:14px;
+background:rgba(255,255,255,0.08);
+color:white;
+font-size:15px;
+}
+
+
+
+/* BUTTON */
+
+.actionBtn{
+width:100%;
+padding:20px;
+margin-top:25px;
+border:none;
+border-radius:20px;
+background:linear-gradient(90deg,#7b2cff,#00d4ff);
+color:white;
+font-size:22px;
+font-weight:700;
+cursor:pointer;
+transition:0.3s;
+}
+
+.actionBtn:hover{
+transform:scale(1.02);
+}
+
+/* STYLE GRID */
+
+.styleGrid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:18px;
+margin-top:25px;
+}
+
+#savedImages img{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:20px;
+display:block;
+}
+.styleCard{
+cursor:pointer;
+border-radius:18px;
+overflow:hidden;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
+transition:0.3s;
+text-align:center;
+height:220px;
+display:flex;
+flex-direction:column;
+}
+.styleCard:hover{
+transform:scale(1.06);
+border-color:#00d4ff;
+}
+
+.activeStyle{
+border:3px solid #00d4ff;
+transform:scale(1.05);
+box-shadow:0 0 25px #00d4ff;
+}
+
+.styleCard img{
+width:100%;
+height:160px;
+object-fit:cover;
+display:block;
+flex:1;
+}
+
+.styleCard p{
+padding:12px;
+font-size:15px;
+font-weight:600;
+}
+
+/* LOADING */
+
+.loadingBox{
+display:none;
+margin-top:35px;
+}
+
+.loadingText{
+text-align:center;
+margin-bottom:15px;
+font-size:18px;
+color:#d1d5db;
+}
+
+.progressOuter{
+width:100%;
+height:30px;
+background:rgba(255,255,255,0.08);
+border-radius:50px;
+overflow:hidden;
+}
+
+.progressInner{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#7b2cff,#00d4ff);
+text-align:center;
+line-height:30px;
+font-weight:700;
+transition:0.3s;
+}
+
+/* RESULT */
+
+.resultSection{
+display:none;
+margin-top:45px;
+text-align:center;
+animation:fadeIn 1s ease;
+}
+
+.resultSection img{
+width:100%;
+max-width:700px;
+border-radius:35px;
+border:3px solid rgba(255,255,255,0.1);
+box-shadow:
+0 0 40px rgba(123,44,255,0.35),
+0 0 80px rgba(0,212,255,0.18);
+opacity:1;
+}
+
+.resultBtns{
+margin-top:25px;
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.resultBtns button{
+padding:16px 30px;
+border:none;
+border-radius:50px;
+font-size:18px;
+font-weight:700;
+cursor:pointer;
+}
+
+.downloadBtn{
+background:#00c853;
+color:white;
+}
+
+.createBtn{
+background:linear-gradient(90deg,#7b2cff,#00d4ff);
+color:white;
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(30px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:48px;
+}
+
+.generatorBox{
+padding:25px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="sidebar">
+
+<h2>QM AI</h2>
+
+<button onclick="showGenerator()">
+🎨 AI Generator
+</button>
+
+<button onclick="showUpload()">
+🖼 Upload Editor
+</button>
+
+<button>
+✨ AI Tools
+</button>
+
+<button onclick="showImages()">
+📁 My Images
+</button>
+
+</div>
+
+<div class="mainContent">
+
+<div class="bg1"></div>
+<div class="bg2"></div>
+
+<header>
+
+<div class="logo">
+QM AI
+</div>
+
+<nav>
+
+<button onclick="showGenerator()">
+Create For Free
+</button>
+
+<button onclick="showUpload()">
+Upload & Create Art
+</button>
+
+</nav>
+
+</header>
+
+<section class="hero">
+
+<h1>
+AI Image Generator
+</h1>
+
+<p>
+Generate AI images and transform uploaded photos into Anime, Ghibli, Fantasy, Watercolor, Sketch and more.
+</p>
+
+</section>
+<!-- MY IMAGES -->
+
+<section class="generatorSection"
+id="imagesSection">
+
+<div class="generatorBox">
+
+<h2>
+My Images
+</h2>
+
+<p>
+Your generated AI images will appear here.
+</p>
+
+<div class="styleGrid" id="savedImages">
+
+<p style="color:#cbd5e1;">
+No images generated yet.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- TEXT TO IMAGE -->
+
+<section class="generatorSection" id="generatorSection">
+
+<div class="generatorBox">
+
+<h2>
+Create AI Image
+</h2>
+
+<p>
+Describe your imagination.
+</p>
+
+<div class="topControls">
+
+<select>
+<option>16:9</option>
+<option>1:1</option>
+<option>9:16</option>
+</select>
+
+<select>
+<option>1K Quality</option>
+<option>HD Quality</option>
+</select>
+
+<button class="fastBtn">
+⚡ Fast
+</button>
+
+<button class="thinkBtn">
+🧠 Think
+</button>
+
+</div>
+
+<textarea id="prompt"
+placeholder="A futuristic anime city with neon lights..."></textarea>
+
+<button class="actionBtn"
+onclick="generateImage()">
+Generate Image
+</button>
+
+<div class="loadingBox"
+id="loadingBox">
+
+<div class="loadingText"
+id="loadingText">
+Preparing AI generation...
+</div>
+
+<div class="progressOuter">
+
+<div class="progressInner"
+id="progressInner">
+0%
+</div>
+
+</div>
+
+</div>
+
+<div class="resultSection"
+id="resultSection">
+
+<img id="generatedImage">
+
+<div class="resultBtns">
+
+<button class="downloadBtn"
+onclick="downloadImage()">
+Download Image
+</button>
+
+<button class="createBtn"
+onclick="resetGenerator()">
+Create Next One
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- UPLOAD -->
+
+<section class="generatorSection"
+id="uploadSection">
+
+<div class="generatorBox">
+
+<h2>
+Upload & Transform
+</h2>
+
+<p>
+Upload an image and convert it into amazing AI art.
+</p>
+
+<input type="file"
+id="imageUpload"
+accept="image/*">
+
+<div class="styleGrid">
+
+<!-- ANIME -->
+
+<div class="styleCard activeStyle"
+onclick="selectStyle(this,'anime')">
+
+<img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop">
+
+<p>🌸 Anime</p>
+
+</div>
+
+<!-- GHIBLI -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'ghibli')">
+
+<img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=1200&auto=format&fit=crop">
+
+<p>🍃 Ghibli</p>
+
+</div>
+
+<!-- WATERCOLOR -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'watercolor')">
+
+<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop">
+
+<p>🖌 Watercolor</p>
+
+</div>
+
+<!-- SKETCH -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'sketch')">
+
+<img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop">
+
+<p>✏ Sketch</p>
+
+</div>
+
+<!-- FANTASY -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'fantasy')">
+
+<img src="https://images.unsplash.com/photo-1516117172878-fd2c41f4a759?q=80&w=1200&auto=format&fit=crop">
+
+<p>🧝 Fantasy</p>
+
+</div>
+
+<!-- OIL PAINT -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'oil')">
+
+<img src="https://images.unsplash.com/photo-1515405295579-ba7b45403062?q=80&w=1200&auto=format&fit=crop">
+
+<p>🖼 Oil Painting</p>
+
+</div>
+
+<!-- COMIC -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'comic')">
+
+<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop">
+
+<p>💥 Comic Book</p>
+
+</div>
+
+<!-- PIXEL -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'pixel')">
+
+<img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
+
+<p>🕹 Pixel Art</p>
+
+</div>
+
+<!-- CYBERPUNK -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'cyberpunk')">
+
+<img src="https://images.unsplash.com/photo-1520034475321-cbe63696469a?q=80&w=1200&auto=format&fit=crop">
+
+<p>🌆 Cyberpunk</p>
+
+</div>
+
+<!-- NEON -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'neon')">
+
+<img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop">
+
+<p>⚡ Neon Glow</p>
+
+</div>
+
+<!-- 3D -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'3d')">
+
+<img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=1200&auto=format&fit=crop">
+
+<p>🧊 3D Render</p>
+
+</div>
+
+<!-- ISOMETRIC -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'isometric')">
+
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop">
+
+<p>📐 Isometric</p>
+
+</div>
+
+<!-- GAME ART -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'gameart')">
+
+<img src="https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=1200&auto=format&fit=crop">
+
+<p>🎮 Game Art</p>
+
+</div>
+
+<!-- CLAY -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'clay')">
+
+<img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop">
+
+<p>🧱 Clay Art</p>
+
+</div>
+
+<!-- LOW POLY -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'lowpoly')">
+
+<img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop">
+
+<p>🔺 Low Poly</p>
+
+</div>
+
+<!-- DESIGN -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'minimal')">
+
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop">
+
+<p>🎨 Minimal Design</p>
+
+</div>
+
+<!-- GRAPHIC -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'poster')">
+
+<img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=1200&auto=format&fit=crop">
+
+<p>📢 Graphic Poster</p>
+
+</div>
+
+<!-- LOGO -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'logo')">
+
+<img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=1200&auto=format&fit=crop">
+
+<p>🔥 Logo Style</p>
+
+</div>
+
+<!-- FINE ART -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'fineart')">
+
+<img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=1200&auto=format&fit=crop">
+
+<p>🖼 Fine Art</p>
+
+</div>
+
+<!-- HISTORICAL -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'historical')">
+
+<img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=1200&auto=format&fit=crop">
+
+<p>🏛 Historical</p>
+
+</div>
+
+<!-- STORYBOOK -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'storybook')">
+
+<img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1200&auto=format&fit=crop">
+
+<p>📚 Storybook</p>
+
+</div>
+
+<!-- REALISTIC -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'realistic')">
+
+<img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1200&auto=format&fit=crop">
+
+<p>📸 Realistic</p>
+
+</div>
+
+<!-- VINTAGE -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'vintage')">
+
+<img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=1200&auto=format&fit=crop">
+
+<p>📼 Vintage</p>
+
+</div>
+
+<!-- DARK -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'dark')">
+
+<img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop">
+
+<p>🌑 Dark Cinematic</p>
+
+</div>
+
+<!-- RPG -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'rpg')">
+
+<img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
+
+<p>⚔ Fantasy RPG</p>
+
+</div>
+
+<!-- MATTE -->
+
+<div class="styleCard"
+onclick="selectStyle(this,'matte')">
+
+<img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1200&auto=format&fit=crop">
+
+<p>🌌 Matte Painting</p>
+
+</div>
+
+</div>
+
+
+
+
+<input type="hidden"
+id="uploadStyle"
+value="anime">
+
+<button class="actionBtn"
+onclick="transformImage()">
+Transform Into Art
+</button>
+
+<div class="loadingBox"
+id="uploadLoading">
+
+<div class="loadingText"
+id="uploadText">
+Preparing transformation...
+</div>
+
+<div class="progressOuter">
+
+<div class="progressInner"
+id="uploadProgress">
+0%
+</div>
+
+</div>
+
+</div>
+
+<div class="resultSection"
+id="uploadResult">
+
+<img id="uploadGeneratedImage">
+
+<div class="resultBtns">
+
+<button class="downloadBtn"
+onclick="downloadUploadImage()">
+Download Image
+</button>
+
+<button class="createBtn"
+onclick="resetUpload()">
+Create Next One
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<script>
+
+let selectedUploadStyle = "anime";
+
+/* STYLE SELECT */
+
+function selectStyle(card,style){
+
+selectedUploadStyle = style;
+
+document.getElementById("uploadStyle")
+.value = style;
+
+document.querySelectorAll(".styleCard")
+.forEach(c=>{
+
+c.classList.remove("activeStyle");
+
+});
+
+card.classList.add("activeStyle");
+
+}
+
+/* SCROLL */
+
+/* PAGE SWITCH */
+
+function showGenerator(){
+
+document.getElementById("generatorSection")
+.classList.add("activeSection");
+
+document.getElementById("uploadSection")
+.classList.remove("activeSection");
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+function showUpload(){
+
+document.getElementById("uploadSection")
+.classList.add("activeSection");
+
+document.getElementById("generatorSection")
+.classList.remove("activeSection");
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+function showImages(){
+
+document.querySelectorAll(".generatorSection")
+.forEach(sec=>{
+
+sec.classList.remove("activeSection");
+
+});
+
+document.getElementById("imagesSection")
+.classList.add("activeSection");
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+/* GENERATE IMAGE */
+
+function generateImage(){
+
+const prompt =
+document.getElementById("prompt").value;
+
+if(!prompt){
+
+alert("Please enter a prompt.");
+
+return;
+
+}
+
+document.getElementById("loadingBox")
+.style.display = "block";
+
+
+
+let progress = 0;
+
+const interval = setInterval(()=>{
+
+progress += 5;
+
+document.getElementById("progressInner")
+.style.width = progress + "%";
+
+document.getElementById("progressInner")
+.innerHTML = progress + "%";
+
+if(progress >= 100){
+
+clearInterval(interval);
+
+const imageUrl =
+"https://image.pollinations.ai/prompt/" +
+encodeURIComponent(prompt);
+
+saveImage(imageUrl);
+
+const img =
+document.getElementById("generatedImage");
+
+img.onload = function(){
+
+document.getElementById("loadingBox")
+.style.display = "none";
+
+document.getElementById("resultSection")
+.style.display = "block";
+
+};
+
+img.src = imageUrl;
+
+}
+
+},250);
+
+}
+
+/* TRANSFORM IMAGE */
+
+function transformImage(){
+
+const file =
+document.getElementById("imageUpload").files[0];
+
+const style =
+selectedUploadStyle;
+
+if(!file){
+
+alert("Please upload an image.");
+
+return;
+
+}
+
+document.getElementById("uploadLoading")
+.style.display = "block";
+
+let progress = 0;
+
+const texts = [
+
+"Uploading image...",
+"Analyzing image...",
+"Applying AI effects...",
+"Generating artwork...",
+"Enhancing details...",
+"Finalizing masterpiece..."
+
+];
+
+let index = 0;
+
+const interval = setInterval(()=>{
+
+progress += 5;
+
+document.getElementById("uploadProgress")
+.style.width = progress + "%";
+
+document.getElementById("uploadProgress")
+.innerHTML = progress + "%";
+
+if(progress % 20 === 0 &&
+index < texts.length-1){
+
+index++;
+
+document.getElementById("uploadText")
+.innerHTML = texts[index];
+
+}
+
+if(progress >= 100){
+
+clearInterval(interval);
+
+const reader =
+new FileReader();
+
+reader.onload = function(e){
+
+const img =
+document.getElementById("uploadGeneratedImage");
+
+img.style.filter = "none";
+
+img.style.transform = "none";
+
+img.style.border = "none";
+
+img.style.boxShadow =
+"0 0 40px rgba(123,44,255,0.35)";
+
+if(style === "anime"){
+
+img.style.filter =
+"saturate(180%) contrast(120%)";
+
+img.style.transform =
+"scale(1.02)";
+
+}
+
+else if(style === "ghibli"){
+
+img.style.filter =
+"brightness(115%) saturate(140%) sepia(10%)";
+
+}
+
+else if(style === "watercolor"){
+
+img.style.filter =
+"blur(0.6px) saturate(140%) brightness(110%)";
+
+}
+
+else if(style === "sketch"){
+
+img.style.filter =
+"grayscale(100%) contrast(250%) brightness(120%)";
+
+img.style.mixBlendMode = "screen";
+
+}
+
+else if(style === "fantasy"){
+
+img.style.filter =
+"hue-rotate(20deg) saturate(180%) brightness(110%)";
+
+}
+
+else if(style === "cyberpunk"){
+
+img.style.filter =
+"hue-rotate(250deg) saturate(250%) contrast(140%)";
+
+}
+
+else if(style === "oil"){
+
+img.style.filter =
+"saturate(160%) contrast(110%) sepia(20%)";
+
+}
+
+else if(style === "dark"){
+
+img.style.filter =
+"brightness(70%) contrast(140%)";
+
+}
+
+img.src = e.target.result;
+
+document.getElementById("uploadLoading")
+.style.display = "none";
+
+document.getElementById("uploadResult")
+.style.display = "block";
+
+saveImage(e.target.result);
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+},250);
+
+}
+
+/* DOWNLOAD */
+
+async function downloadImage() {
+
+await downloadFromURL(
+document.getElementById("generatedImage").src,
+"qm-ai-image.png"
+);
+
+}
+
+async function downloadUploadImage() {
+
+await downloadFromURL(
+document.getElementById("uploadGeneratedImage").src,
+"qm-ai-art.png"
+);
+
+}
+
+async function downloadFromURL(url, filename) {
+
+try{
+
+const response =
+await fetch(url);
+
+const blob =
+await response.blob();
+
+const blobUrl =
+URL.createObjectURL(blob);
+
+const a =
+document.createElement("a");
+
+a.href = blobUrl;
+
+a.download = filename;
+
+document.body.appendChild(a);
+
+a.click();
+
+document.body.removeChild(a);
+
+URL.revokeObjectURL(blobUrl);
+
+}catch(err){
+
+window.open(url,"_blank");
+
+alert("Long press image and save.");
+
+}
+
+}
+
+function saveImage(url){
+
+const container =
+document.getElementById("savedImages");
+
+if(container.innerHTML.includes("No images")){
+
+container.innerHTML = "";
+
+}
+
+const img =
+document.createElement("img");
+
+img.src = url;
+
+
+
+container.prepend(img);
+
+}
+/* RESET */
+
+function resetGenerator(){
+
+document.getElementById("prompt")
+.value = "";
+
+document.getElementById("resultSection")
+.style.display = "none";
+
+document.getElementById("loadingBox")
+.style.display = "none";
+
+document.getElementById("progressInner")
+.style.width = "0%";
+
+document.getElementById("progressInner")
+.innerHTML = "0%";
+
+}
+
+function resetUpload(){
+
+document.getElementById("imageUpload")
+.value = "";
+
+document.getElementById("uploadResult")
+.style.display = "none";
+
+document.getElementById("uploadLoading")
+.style.display = "none";
+
+document.getElementById("uploadProgress")
+.style.width = "0%";
+
+document.getElementById("uploadProgress")
+.innerHTML = "0%";
+
+}
+
+</script>
+
+</div>
+
+</body>
+
+</html> 
